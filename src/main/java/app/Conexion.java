@@ -101,6 +101,7 @@ public class Conexion implements Runnable {
     }
 
     private void enviarRespuesta(String respuesta) {
+        // generar respuesta?
         try {
             socket.getOutputStream().write(respuesta.getBytes());
         } catch (IOException ex) {
