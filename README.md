@@ -1,0 +1,2 @@
+# TareaServidor
+servidor miniatura
