@@ -8,11 +8,11 @@ package app;
  */
 public class Control {
 
-    /**
-     * @param args argumentos de linea de comando
-     */
-    public static void main(String[] args) {
-        Servidor servidor = new Servidor(4567);
-        servidor.iniciar();
-    }
+  /**
+   * @param args argumentos de linea de comando
+   */
+  public static void main(String[] args) {
+    Servidor servidor = new Servidor(4567);
+    servidor.iniciar();
+  }
 }
