@@ -12,7 +12,7 @@ public class Control {
    * @param args argumentos de linea de comando
    */
   public static void main(String[] args) {
-    Servidor servidor = new Servidor(4567);
+    Servidor servidor = new Servidor(2345, "/home/bryan/directorioHttp");
     servidor.iniciar();
   }
 }

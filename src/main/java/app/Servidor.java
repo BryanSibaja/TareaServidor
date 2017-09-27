@@ -15,14 +15,17 @@ import java.util.logging.Logger;
 public class Servidor {
 
   private final int puerto;
+  private final String directorio;
 
   /**
    * Constructor
    *
    * @param puerto parametro de tipo entero con el número de puerto
+   * @param directorio directorio del servidor
    */
-  public Servidor(int puerto) {
+  public Servidor(int puerto, String directorio) {
     this.puerto = puerto;
+	this.directorio = directorio;
   }
 
   /**
@@ -35,7 +38,7 @@ public class Servidor {
       servidor = new ServerSocket(puerto);
       while (true) {
         Socket socket = servidor.accept();
-        new Thread(new Conexion(socket)).start();
+        new Thread(new Conexion(socket, directorio)).start();
       }
     } catch (IOException ex) {
       Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
