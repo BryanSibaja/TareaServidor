@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 
 /**
  * Conexión que es manejada en un hilo
@@ -35,7 +36,6 @@ public class Conexion implements Runnable {
    */
   @Override
   public void run() {
-
     HttpSolicitud solicitud = procesarEntrada();
     String contenido = new String();
     String tipo = new String();
@@ -69,6 +69,17 @@ public class Conexion implements Runnable {
       enviar(respuesta.getBytes());
       enviar(datos);
     }
+
+    if (solicitud.getAccion().equals("HEAD")) {
+      String respuesta = generarEncabezado(datos.length, tipo, "200 Ok");
+      enviar(respuesta.getBytes());
+      enviar(contenido.getBytes());
+    }
+    try{
+      socket.close();
+    }catch(IOException ex){
+      System.err.println("Error de cerrado");
+    }
   }
 
   private HttpSolicitud procesarEntrada() {
@@ -92,8 +103,8 @@ public class Conexion implements Runnable {
   }
 
   private String generarEncabezado(int len, String tipo, String estado) {
-    String response = "HTTP/1.1 " + estado + "\r\n" + "Content-Length: " + len + "\r\n" + "Content-Type: " + tipo
-        + "\r\n\r\n";
+    String response = "HTTP/1.1 " +  estado + "\r\n" + "Date: " + LocalDate.now().toString() + "\r\n" + "Content-Length: " + len
+        + "\r\n" + "Content-Type: " + tipo + "\r\n\r\n";
     return response;
   }
 

@@ -36,10 +36,11 @@ public class Servidor {
     try {
       ServerSocket servidor;
       servidor = new ServerSocket(puerto);
-      while (true) {
+      while (!Thread.currentThread().isInterrupted()) {
         Socket socket = servidor.accept();
         new Thread(new Conexion(socket, directorio)).start();
       }
+      servidor.close();
     } catch (IOException ex) {
       Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
     }

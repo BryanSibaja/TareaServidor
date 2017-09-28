@@ -32,7 +32,8 @@ public class HttpSolicitud {
     Deque<String> lineas;
     lineas = new ArrayDeque<>(Arrays.asList(solicitud.split("\r\n")));
     String primera = lineas.poll();
-    Pattern regex = Pattern.compile("(GET|HEAD|POST)\\s/(\\w+/)*(\\w+" + "\\.\\w+)?\\s(HTTP)/\\d\\.\\d");
+    //Pattern regex = Pattern.compile("(GET|HEAD|POST)\\s/(\\w+/)*(\\w+" + "\\.\\w+)?\\s(HTTP)/\\d\\.\\d");
+    Pattern regex = Pattern.compile("(GET|HEAD|POST)\\s/(\\w+/)*(.+" + "\\.\\w+)?\\s(HTTP)/\\d\\.\\d");
     if (!regex.matcher(primera).matches()) {
       return false;
     }
