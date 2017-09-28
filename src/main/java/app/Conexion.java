@@ -75,9 +75,9 @@ public class Conexion implements Runnable {
       enviar(respuesta.getBytes());
       enviar(contenido.getBytes());
     }
-    try{
+    try {
       socket.close();
-    }catch(IOException ex){
+    } catch (IOException ex) {
       System.err.println("Error de cerrado");
     }
   }
@@ -103,8 +103,8 @@ public class Conexion implements Runnable {
   }
 
   private String generarEncabezado(int len, String tipo, String estado) {
-    String response = "HTTP/1.1 " +  estado + "\r\n" + "Date: " + LocalDate.now().toString() + "\r\n" + "Content-Length: " + len
-        + "\r\n" + "Content-Type: " + tipo + "\r\n\r\n";
+    String response = "HTTP/1.1 " + estado + "\r\n" + "Date: " + LocalDate.now().toString() + "\r\n"
+        + "Content-Length: " + len + "\r\n" + "Content-Type: " + tipo + "\r\n\r\n";
     return response;
   }
 
