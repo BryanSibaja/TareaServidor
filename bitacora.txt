@@ -1,0 +1,3 @@
+GET	localhost:2345	/index.html
+GET	localhost:2345	/erza.jpg
+GET	localhost:2345	/img.jpg

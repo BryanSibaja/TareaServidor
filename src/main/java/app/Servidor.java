@@ -25,7 +25,7 @@ public class Servidor {
    */
   public Servidor(int puerto, String directorio) {
     this.puerto = puerto;
-	this.directorio = directorio;
+    this.directorio = directorio;
   }
 
   /**

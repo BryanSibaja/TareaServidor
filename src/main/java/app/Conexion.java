@@ -1,7 +1,9 @@
 package app;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,6 +54,7 @@ public class Conexion implements Runnable {
     byte[] datos = null;
     try {
       datos = Files.readAllBytes(archivo);
+      tipo = Files.probeContentType(archivo);
     } catch (IOException ex) {
       String dato = "<h1>501 Not Found</h1>";
       String respuesta = generarEncabezado(dato.length(), "text/html", "404 Not Found");
@@ -74,6 +77,12 @@ public class Conexion implements Runnable {
       String respuesta = generarEncabezado(datos.length, tipo, "200 Ok");
       enviar(respuesta.getBytes());
       enviar(contenido.getBytes());
+    }
+    String entrada = solicitud.getAccion() + "\t" + solicitud.getEncabezado("Host") + "\t" + solicitud.getRecurso();
+    try (PrintWriter out = new PrintWriter(new FileOutputStream("bitacora.txt",true))) {
+      out.println(entrada);
+    }catch(IOException ex){
+      System.err.println("Error al escrivir Bitacora");
     }
     try {
       socket.close();
