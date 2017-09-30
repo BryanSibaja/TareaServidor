@@ -20,6 +20,11 @@ public class Conexion implements Runnable {
 
   private final Socket socket;
   private final String directorio;
+  private final String ERROR_404 = "404 Not Found";
+  private final String ERROR_406 = "406 Not acceptable";
+  private final String ERROR_501 = "501 Not Implemented";
+  private final String HTML = "text/html";
+  private final String OK = "200 OK";
 
   /**
    * Constructor
@@ -44,44 +49,53 @@ public class Conexion implements Runnable {
 
     if (!solicitud.esCorrecta()) {
       contenido = "<h1>501 Not Implemented</h1>";
-      String respuesta = generarEncabezado(contenido.length(), "text/html", "501 Not Implemented");
+      String respuesta = generarEncabezado(contenido.length(), HTML, ERROR_501);
       enviar(respuesta.getBytes());
       enviar(contenido.getBytes());
       return;
     }
 
-    Path archivo = Paths.get(directorio + solicitud.getRecurso());
     byte[] datos = null;
-    try {
-      datos = Files.readAllBytes(archivo);
-      tipo = Files.probeContentType(archivo);
-    } catch (IOException ex) {
-      String dato = "<h1>501 Not Found</h1>";
-      String respuesta = generarEncabezado(dato.length(), "text/html", "404 Not Found");
+    if(solicitud.getRecurso().equals("/")){
+      datos = "<h1>Miniservidor de Bryan<h1>".getBytes();
+    } else {
+      Path archivo = Paths.get(directorio + solicitud.getRecurso());
+      try {
+        datos = Files.readAllBytes(archivo);
+        tipo = Files.probeContentType(archivo);
+      } catch (IOException ex) {
+        String dato = "<h1>501 Not Found</h1>";
+        String respuesta = generarEncabezado(dato.length(), HTML, ERROR_404);
+        enviar(respuesta.getBytes());
+        enviar(dato.getBytes());
+        return;
+      }
+    }
+
+    if (!(solicitud.getEncabezado("Accept").equals("*/*") || solicitud.getEncabezado("Accept").equals(tipo))) {
+      contenido = "<h1>406 Not acceptable</h1>";
+      String respuesta = generarEncabezado(contenido.length(), HTML, ERROR_406);
       enviar(respuesta.getBytes());
-      enviar(dato.getBytes());
+      enviar(contenido.getBytes());
       return;
     }
 
-    if (solicitud.getRecurso().equals("mimetype aceptado")) {
-      // Error 406 no aceptado
-    }
-
     if (solicitud.getAccion().equals("GET") || solicitud.getAccion().equals("POST")) {
-      String respuesta = generarEncabezado(datos.length, tipo, "200 Ok");
+      String respuesta = generarEncabezado(datos.length, tipo, OK);
       enviar(respuesta.getBytes());
       enviar(datos);
     }
 
     if (solicitud.getAccion().equals("HEAD")) {
-      String respuesta = generarEncabezado(datos.length, tipo, "200 Ok");
+      String respuesta = generarEncabezado(datos.length, tipo, OK);
       enviar(respuesta.getBytes());
       enviar(contenido.getBytes());
     }
+
     String entrada = solicitud.getAccion() + "\t" + solicitud.getEncabezado("Host") + "\t" + solicitud.getRecurso();
-    try (PrintWriter out = new PrintWriter(new FileOutputStream("bitacora.txt",true))) {
+    try (PrintWriter out = new PrintWriter(new FileOutputStream("bitacora.txt", true))) {
       out.println(entrada);
-    }catch(IOException ex){
+    } catch (IOException ex) {
       System.err.println("Error al escrivir Bitacora");
     }
     try {
